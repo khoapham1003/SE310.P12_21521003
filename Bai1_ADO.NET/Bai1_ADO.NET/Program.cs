@@ -1,3 +1,5 @@
+using Bai1_ADO.NET.Presentation;
+
 namespace Bai1_ADO.NET
 {
     internal static class Program
@@ -11,7 +13,7 @@ namespace Bai1_ADO.NET
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Form1());
+            Application.Run(new FirstForm());
         }
     }
 }
