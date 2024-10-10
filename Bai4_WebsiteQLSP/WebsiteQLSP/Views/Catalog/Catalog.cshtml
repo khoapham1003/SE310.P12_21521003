@@ -1,0 +1,43 @@
+﻿@model IEnumerable<WebsiteQLSP.Models.Catalog>
+
+@{
+    ViewData["Title"] = "Danh mục sản phẩm";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a href="@Url.Action("Create")" class="btn btn-primary">Tạo mới</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CatalogId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CatalogName)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CatalogId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CatalogName)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.CatalogId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.CatalogId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.CatalogId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
