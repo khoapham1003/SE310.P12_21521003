@@ -6,16 +6,24 @@ namespace BTH2_TheStore.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly Context _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(Context context)
         {
-            _logger = logger;
+            _context = context;
         }
+
+        //private readonly ILogger<HomeController> _logger;
+
+        //public HomeController(ILogger<HomeController> logger)
+        //{
+        //    _logger = logger;
+        //}
 
         public IActionResult Index()
         {
-            return View();
+            var productList = _context.Products.ToList();
+            return View(productList);
         }
 
         public IActionResult Privacy()
