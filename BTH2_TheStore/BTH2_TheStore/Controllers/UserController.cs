@@ -14,6 +14,7 @@ namespace BTH2_TheStore.Controllers
             _context = context;
         }
 
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -30,10 +31,19 @@ namespace BTH2_TheStore.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([Bind("UserId,UserName,Password,Role")] User user)
         {
-            user.Role = "Customer";
-            _context.Add(user);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Login", "User");
+            try
+            {
+                user.Role = "Customer";
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Registration successful!";
+                return RedirectToAction("Login", "User");
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Registration failed. Please try again.";
+                return View();
+            }
         }
         [HttpGet]
         public IActionResult Login()
@@ -44,7 +54,7 @@ namespace BTH2_TheStore.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "User");
+                return RedirectToAction("Index", "Home");
             }
         }
 
@@ -57,7 +67,15 @@ namespace BTH2_TheStore.Controllers
                 if (u != null)
                 {
                     HttpContext.Session.SetString("UserName", u.UserName.ToString());
-                    return RedirectToAction("Index", "Product");
+                    TempData["SuccessMessage"] = "Login successful!";
+                    if (u.Role == "Admin")
+                        return RedirectToAction("Dashboard", "User");
+                    else
+                        return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Invalid username or password.";
                 }
             }
             return View();
@@ -68,6 +86,7 @@ namespace BTH2_TheStore.Controllers
         {
             HttpContext.Session.Clear();
             HttpContext.Session.Remove("UserName");
+            TempData["SuccessMessage"] = "You have successfully logged out.";
             return RedirectToAction("Login", "User");
         }
         public async Task<IActionResult> Index()
@@ -189,6 +208,16 @@ namespace BTH2_TheStore.Controllers
 
             return View(user);
         }
+        public async Task<IActionResult> Dashboard()
+        {
+            var totalCustomers = await _context.Users.CountAsync(u => u.Role == "Customer");
+            var totalAdmins = await _context.Users.CountAsync(u => u.Role == "Admin");
+            var totalProducts = await _context.Products.CountAsync();
 
+            ViewBag.TotalCustomers = totalCustomers;
+            ViewBag.TotalAdmins = totalAdmins;
+            ViewBag.TotalProducts = totalProducts;
+            return View();
+        }
     }
 }

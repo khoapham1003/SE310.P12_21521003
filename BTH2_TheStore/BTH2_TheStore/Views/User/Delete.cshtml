@@ -1,0 +1,19 @@
+﻿@model BTH2_TheStore.Models.User
+
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h2>Are you sure you want to delete this user?</h2>
+
+<div>
+    <h4>@Model.UserName</h4>
+    <p>Password: @Model.Password</p>
+    <p>Role: @Model.Role</p>
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="UserId" />
+    <input type="submit" value="Delete" class="btn btn-danger" />
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

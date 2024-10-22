@@ -1,6 +1,8 @@
 using BTH2_TheStore.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using X.PagedList;
 
 namespace BTH2_TheStore.Controllers
 {
@@ -20,10 +22,21 @@ namespace BTH2_TheStore.Controllers
         //    _logger = logger;
         //}
 
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            var productList = _context.Products.ToList();
-            return View(productList);
+            int pageSize = 3;
+            int pageNumber = page == null || page < 0 ? 1 : page.Value;
+
+
+
+            var productList = _context.Products.AsNoTracking().OrderBy(x => x.ProductName);
+            PagedList<Product> list = new PagedList<Product>(productList,pageNumber,pageSize);
+            return View(list);
+        }
+        public IActionResult Detail(int detailId)
+        {
+            var product = _context.Products.SingleOrDefault(x => x.ProductId == detailId);
+            return View(product);
         }
 
         public IActionResult Privacy()
